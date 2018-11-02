@@ -1,0 +1,5 @@
+.idea
+vendor
+docker/data
+phpunit.xml
+.env
