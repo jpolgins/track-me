@@ -18,4 +18,4 @@ Clone repository and run following command in terminal:
 mv .env.dist .env && docker-compose up -d && sh composer-install.sh
 ```
 
-and navigate to http://localhost:8088 :rainbow:
+and navigate to http://localhost:8080 :rainbow:
