@@ -1,4 +1,4 @@
-TrackMe :watch: - simple time tracking web app :rocket:
+TrackMe :watch: - Scailable big data enterprise :chart_with_upwards_trend: nex-gen robust solution :ok_hand: for time tracking, powered by AI :alien: based on blockchain technologies :wrench: :rocket:
 
 ![UI](example.png)
 
