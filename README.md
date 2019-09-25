@@ -6,16 +6,16 @@ TrackMe :watch: - Scailable big data enterprise :chart_with_upwards_trend: nex-g
 
 :whale:
 ```
-➜  ~ docker --version
-Docker version 18.06.1-ce, build e68fc7a
-➜  ~ docker-compose --version
-docker-compose version 1.22.0, build f46880fe
+docker --version
+output: ~ Docker version 18.06.1-ce, build e68fc7a
+docker-compose --version
+output: ~ docker-compose version 1.22.0, build f46880fe
 ```
 
 ## Running app
 Clone repository and run following command in terminal:
 ```
-mv .env.dist .env && docker-compose up -d && sh composer-install.sh
+cp .env.dist .env && docker-compose up -d && sh composer-install.sh
 ```
 
 Web UI will be available at http://localhost:8080 :rainbow:
