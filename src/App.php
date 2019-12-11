@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TrackMe;
 
 use TrackMe\Component\Database\Database;
@@ -10,28 +12,22 @@ use TrackMe\Repository\RecordRepository;
 
 final class App
 {
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
     public function handle(Request $request): Response
     {
         $recordController = new RecordController(new RecordRepository(Database::instance()));
 
         if (RecordController::API_PATH === $request->getRequestUri()) {
 
-            if ($request->getMethod() === Request::HTTP_POST) {
+            if (Request::HTTP_POST === $request->getMethod()) {
                 return $recordController->createAction(
                     $request->request['timeSpent'],
                     $request->request['description']
                 );
             }
 
-            if ($request->getMethod() === Request::HTTP_GET) {
+            if (Request::HTTP_GET === $request->getMethod()) {
                 return $recordController->getAction();
             }
-
         }
 
         return Response::notFound('Route not found');

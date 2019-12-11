@@ -1,61 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TrackMe\Model;
 
+use DateTimeImmutable;
 
 final class Record
 {
-    public const CREATED_AT_FORMAT = 'Y-m-d H:i:s';
+    private string $timeSpent;
+    private string $description;
+    private DateTimeImmutable $createdAt;
 
-    /**
-     * @var string
-     */
-    private $timeSpent;
-
-    /**
-     * @var string
-     */
-    private $description;
-
-    /**
-     * @var string
-     */
-    private $createdAt;
-
-    /**
-     * Record constructor.
-     *
-     * @param string $timeSpent
-     * @param string $description
-     */
-    public function __construct(string $timeSpent, string $description)
+    public function __construct(string $timeSpent, string $description, DateTimeImmutable $createdAt = null)
     {
-        $this->timeSpent    = $timeSpent;
-        $this->description  = $description;
-        $this->createdAt    = (new \DateTime('now'))->format(self::CREATED_AT_FORMAT);
+        $this->timeSpent = $timeSpent;
+        $this->description = $description;
+        $this->createdAt = new DateTimeImmutable() ?? $createdAt;
     }
 
-    /**
-     * @return string
-     */
-    public function getTimeSpent(): string
+    public function timeSpent(): string
     {
         return $this->timeSpent;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription(): string
+    public function description(): string
     {
         return $this->description;
     }
 
-    /**
-     * @return string
-     */
-    public function getCreatedAt(): string
+    public function createdAt(): DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'timeSpent' => $this->timeSpent(),
+            'description' => $this->description(),
+            'createdAt' => $this->createdAt(),
+        ];
     }
 }

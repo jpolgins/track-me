@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TrackMe\Tests\Controller;
 
 use PHPUnit\Framework\TestCase;
@@ -9,36 +11,33 @@ use TrackMe\Repository\RecordRepositoryInterface;
 
 class RecordControllerTest extends TestCase
 {
-    /**
-     * @var RecordController
-     */
-    private $controller;
+    private RecordController $controller;
 
     protected function setUp()
     {
+        /* @var RecordRepositoryInterface $recordRepositoryMock */
         $recordRepositoryMock = $this->getMockBuilder(RecordRepositoryInterface::class)->getMock();
-        $recordRepositoryMock->method('persist')->willReturn(new Record('1h', 'test'));
-        $recordRepositoryMock->method('findAll')->willReturn([
+        $recordRepositoryMock->method('add')->willReturn(new Record('1h', 'test'));
+        $recordRepositoryMock->method('all')->willReturn([
             [
-                'timeSpent'     => '1h',
-                'description'   => 'test',
-                'createdAt'     => '2018-11-01 20:10:10'
-            ]
+                'timeSpent' => '1h',
+                'description' => 'test',
+                'createdAt' => '2018-11-01 20:10:10',
+            ],
         ]);
 
-        /** @var RecordRepositoryInterface $recordRepositoryMock */
         $this->controller = new RecordController($recordRepositoryMock);
     }
 
     /**
      * @runInSeparateProcess
      */
-    public function testCreateAction()
+    public function testCreateAction(): void
     {
         $response = $this->controller->createAction('1h', 'test');
-        self::assertJson($response);
+        self::assertJson((string) $response);
 
-        $content = $response->getContent();
+        $content = $response->content();
         self::assertArrayHasKey('timeSpent', $content);
         self::assertArrayHasKey('description', $content);
         self::assertArrayHasKey('createdAt', $content);
@@ -50,21 +49,21 @@ class RecordControllerTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testGetAction()
+    public function testGetAction(): void
     {
         $response = $this->controller->getAction();
-        self::assertJson($response);
+        self::assertJson((string) $response);
 
-        $content = $response->getContent();
+        $content = $response->content();
         $expected = [
             '2018-11-01' => [
                 [
-                    'timeSpent'     => '1h',
-                    'description'   => 'test',
-                    'createdAt'     => '2018-11-01 20:10:10',
-                    'title'         => '2018-11-01'
-                ]
-            ]
+                    'timeSpent' => '1h',
+                    'description' => 'test',
+                    'createdAt' => '2018-11-01 20:10:10',
+                    'title' => '2018-11-01',
+                ],
+            ],
         ];
 
         self::assertEquals($expected, $content);

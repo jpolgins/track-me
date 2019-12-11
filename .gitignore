@@ -2,4 +2,4 @@
 vendor
 docker/data
 phpunit.xml
-.env
+.php_cs.cache

@@ -1,7 +1,8 @@
 <?php
 
-namespace TrackMe\Controller;
+declare(strict_types=1);
 
+namespace TrackMe\Controller;
 
 use TrackMe\Component\Http\Response;
 use TrackMe\Model\Record;
@@ -11,63 +12,25 @@ final class RecordController
 {
     public const API_PATH = '/api/v13/records';
 
-    /**
-     * @var RecordRepositoryInterface
-     */
-    private $recordRepository;
+    private RecordRepositoryInterface $recordRepository;
 
-    /**
-     * RecordController constructor.
-     *
-     * @param RecordRepositoryInterface $recordRepository
-     */
     public function __construct(RecordRepositoryInterface $recordRepository)
     {
         $this->recordRepository = $recordRepository;
     }
 
-    /**
-     * @param string $timeSpent
-     * @param string $description
-     *
-     * @return Response
-     */
     public function createAction(string $timeSpent, string $description): Response
     {
-        $record = $this->recordRepository->persist(new Record($timeSpent, $description));
+        $record = new Record($timeSpent, $description);
+        $this->recordRepository->add($record);
 
-        return Response::ok([
-            'timeSpent'     => $record->getTimeSpent(),
-            'description'   => $record->getDescription(),
-            'createdAt'     => $record->getCreatedAt(),
-        ]);
+        return Response::success($record->toArray());
     }
 
-    /**
-     * @return Response
-     */
     public function getAction(): Response
     {
-        $records = $this->recordRepository->findAll();
+        $records = $this->recordRepository->all();
 
-        return Response::ok($this->groupByRecordCreationDate($records));
-    }
-
-    /**
-     * @param array $records
-     *
-     * @return array
-     */
-    private function groupByRecordCreationDate(array $records): array
-    {
-        $group = [];
-
-        foreach ($records as $record) {
-            $date = \DateTime::createFromFormat(Record::CREATED_AT_FORMAT, $record['createdAt'])->format('Y-m-d');
-            $record['title'] = $date;
-            $group[$date][] = $record;
-        }
-
-        return $group;
+        return Response::success($records);
     }
 }
