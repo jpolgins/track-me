@@ -1,39 +1,40 @@
-version: "3"
+version: "3.5"
+
 services:
-    mysql:
-      image: mysql:${MYSQL_VERSION}
-      container_name: track-me-mysql
-      restart: always
+    database:
+      image: postgres:latest
+      restart: on-failure
       volumes:
-        - ./docker/mysql/records.sql:/docker-entrypoint-initdb.d/records.sql
-        - ./docker/data/db:/var/lib/mysql
+        - pg_data:/var/lib/postgresql/data:cached
+        - ./docker/postgres/records.sql:/docker-entrypoint-initdb.d/records.sql
+      ports:
+        - 5432
       environment:
-        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-        - MYSQL_DATABASE=${MYSQL_DATABASE}
-        - MYSQL_USER=${MYSQL_USER}
-        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      ports:
-        - "8989:3306"
+        PGDATA: /var/lib/postgresql/data/pgdata
+        POSTGRES_DB: dev
 
-    webserver:
+    web:
       image: nginx:alpine
-      container_name: track-me-webserver
-      working_dir: /application
+      restart: on-failure
       volumes:
-          - .:/application
-          - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+        - ./public:/app/public:cached
+        - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       ports:
-       - "8080:80"
-      restart: always
-      depends_on:
-        - php-fpm
-        - mysql
+        - 1313:80
 
-    php-fpm:
+    app:
       build: docker/php-fpm
-      container_name: track-me-php-fpm
-      working_dir: /application
+      restart: on-failure
+      working_dir: /app
+      links:
+        - database
       volumes:
-        - .:/application
+        - .:/app:rw,cached
+        - app_sessions_data:/var/php/sessions
+        - composer_data:/home/www-data/.composer/cache
         - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
 
+volumes:
+  pg_data:
+  app_sessions_data:
+  composer_data:

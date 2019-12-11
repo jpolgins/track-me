@@ -1,69 +1,49 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TrackMe\Component\Database;
 
+use PDO;
+use PDOStatement;
 
 final class Database implements DatabaseInterface
 {
-    /**
-     * @var \PDO
-     */
-    private $pdo;
+    private PDO $pdo;
 
-    /**
-     * @var Database
-     */
-    private static $instance;
+    private static $connection;
 
     protected function __construct()
     {
         $opt = [
-            \PDO::ATTR_ERRMODE              => \PDO::ERRMODE_EXCEPTION,
-            \PDO::ATTR_DEFAULT_FETCH_MODE   => \PDO::FETCH_ASSOC,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ];
 
-        $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8', getenv('MYSQL_HOST'), getenv('MYSQL_DATABASE'));
-        $this->pdo = new \PDO($dsn, getenv('MYSQL_USER'), getenv('MYSQL_PASSWORD'), $opt);
+        $dsn = sprintf('pgsql:host=%s;dbname=%s', 'database', 'dev');
+        $this->pdo = new PDO($dsn, 'postgres', '', $opt);
     }
 
-    /**
-     * @return Database
-     */
     public static function instance(): self
     {
-        if (self::$instance === null) {
-            self::$instance = new self;
+        if (null === self::$connection) {
+            self::$connection = new self();
         }
 
-        return self::$instance;
+        return self::$connection;
     }
 
-    /**
-     * @param string $statement
-     *
-     * @return int
-     */
     public function execute(string $statement): int
     {
         return $this->pdo->exec($this->pdo->prepare($statement)->queryString);
     }
 
-    /**
-     * @param string $statement
-     *
-     * @return \PDOStatement
-     */
-    public function prepare(string $statement): \PDOStatement
+    public function prepare(string $statement): PDOStatement
     {
         return $this->pdo->prepare($statement);
     }
 
-    /**
-     * @param string $statement
-     *
-     * @return \PDOStatement
-     */
-    public function query(string $statement): \PDOStatement
+    public function query(string $statement): PDOStatement
     {
         return $this->pdo->query($statement);
     }

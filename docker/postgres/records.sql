@@ -1,12 +1,13 @@
-CREATE TABLE `records` (
-  `id` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `timeSpent` varchar(20) NOT NULL,
-  `description` text NOT NULL,
-  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE records (
+  id SERIAL NOT NULL,
+  time_spent varchar(20) NOT NULL,
+  description text NOT NULL,
+  createdat TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+  PRIMARY KEY(id)
+);
 
-INSERT INTO `records` (`timeSpent`, `description`, `createdAt`) VALUES
-('6h', 'Making test task for Scandiweb', '2018-11-01 20:07:53'),
+INSERT INTO records (time_spent, description, createdat) VALUES
+('6h', 'Working on task', '2018-11-01 20:07:53'),
 ('1h', 'Writing and putting on a play', '2018-11-01 16:07:53'),
 ('2h30m', 'Creating and producing a show.', '2018-11-01 16:07:53'),
 ('49m', 'Producing a short film ', '2018-10-01 16:07:53'),

@@ -1,11 +1,11 @@
 {
     "name": "jpolgins/track-me",
-    "description": "Scailable big data enterprise nex-gen robust solution for time tracking, powered by AI and based on blockchain technologies.",
+    "description": "Scalable big data enterprise nex-gen robust solution for time tracking, powered by AI and based on blockchain technologies.",
     "type": "project",
-    "license": "MIT",
+    "license": "WTFPL",
     "authors": [
         {
-            "name": "Jevgenijs Polgujs-Polgins",
+            "name": "Jevgenijs Polgins",
             "email": "j.polgins@gmail.com"
         }
     ],
@@ -23,7 +23,6 @@
     },
     "require": {
         "ext-pdo": "*",
-        "ext-json": "*",
-        "vlucas/phpdotenv": "^2.5"
+        "ext-json": "*"
     }
 }

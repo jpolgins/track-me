@@ -1,54 +1,53 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TrackMe\Repository;
 
+use DateTimeImmutable;
+use PDO;
 use TrackMe\Component\Database\DatabaseInterface;
 use TrackMe\Model\Record;
 
-class RecordRepository implements RecordRepositoryInterface
+final class RecordRepository implements RecordRepositoryInterface
 {
-    /**
-     * @var DatabaseInterface
-     */
-    private $database;
+    private DatabaseInterface $database;
 
-    /**
-     * RecordRepository constructor.
-     *
-     * @param DatabaseInterface $database
-     */
     public function __construct(DatabaseInterface $database)
     {
         $this->database = $database;
     }
 
-    /**
-     * @return array
-     */
-    public function findAll(): array
+    public function all(): array
     {
         $sql = 'SELECT * FROM records ORDER BY createdAt DESC';
 
-        $statement = $this->database->query($sql);
+        $result = $this->database->query($sql)->fetchAll();
+        $records = [];
 
-        return $statement->fetchAll();
+        foreach ($result as $item) {
+            $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $item['createdat'])->format('Y-m-d');
+            $record = [
+                'timeSpent' => $item['time_spent'],
+                'createdAt' => $item['createdat'],
+                'description' => $item['description'],
+                'title' => $date,
+            ];
+
+            $records[$date][] = $record;
+        }
+
+        return $records;
     }
 
-    /**
-     * @param Record $record
-     *
-     * @return Record
-     */
-    public function persist(Record $record): Record
+    public function add(Record $record): void
     {
-        $sql = 'INSERT INTO records (timeSpent, description, createdAt) VALUES (:timeSpent, :description, :createdAt)';
+        $sql = 'INSERT INTO records (time_spent, description, createdat) VALUES (:time_spent, :description, :createdat)';
 
         $statement = $this->database->prepare($sql);
-        $statement->bindParam(':timeSpent', $record->getTimeSpent(), \PDO::PARAM_STR);
-        $statement->bindParam(':description', $record->getDescription(), \PDO::PARAM_STR);
-        $statement->bindParam(':createdAt', $record->getCreatedAt());
+        $statement->bindParam(':time_spent', $record->timeSpent(), PDO::PARAM_STR);
+        $statement->bindParam(':description', $record->description(), PDO::PARAM_STR);
+        $statement->bindParam(':createdat', $record->createdAt()->format('Y-m-d H:i:s'));
         $statement->execute();
-
-        return $record;
     }
 }
