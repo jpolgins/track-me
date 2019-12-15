@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace TrackMe\Tests\Controller;
+namespace TrackMe\Tests\Application\Controller;
 
 use PHPUnit\Framework\TestCase;
-use TrackMe\Controller\RecordController;
-use TrackMe\Model\Record;
-use TrackMe\Repository\RecordRepositoryInterface;
+use TrackMe\Application\Controller\RecordController;
+use TrackMe\Domain\Model\Record\Record;
+use TrackMe\Domain\Model\Record\RecordRepository;
 
 class RecordControllerTest extends TestCase
 {
@@ -15,8 +15,8 @@ class RecordControllerTest extends TestCase
 
     protected function setUp()
     {
-        /* @var RecordRepositoryInterface $recordRepositoryMock */
-        $recordRepositoryMock = $this->getMockBuilder(RecordRepositoryInterface::class)->getMock();
+        /* @var RecordRepository $recordRepositoryMock */
+        $recordRepositoryMock = $this->getMockBuilder(RecordRepository::class)->getMock();
         $recordRepositoryMock->method('add')->willReturn(new Record('1h', 'test'));
         $recordRepositoryMock->method('all')->willReturn([
             [
@@ -56,13 +56,10 @@ class RecordControllerTest extends TestCase
 
         $content = $response->content();
         $expected = [
-            '2018-11-01' => [
-                [
-                    'timeSpent' => '1h',
-                    'description' => 'test',
-                    'createdAt' => '2018-11-01 20:10:10',
-                    'title' => '2018-11-01',
-                ],
+            [
+                'timeSpent' => '1h',
+                'description' => 'test',
+                'createdAt' => '2018-11-01 20:10:10',
             ],
         ];
 

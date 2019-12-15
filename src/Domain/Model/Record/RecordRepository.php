@@ -1,10 +1,8 @@
 <?php
 
-namespace TrackMe\Repository;
+namespace TrackMe\Domain\Model\Record;
 
-use TrackMe\Model\Record;
-
-interface RecordRepositoryInterface
+interface RecordRepository
 {
     public function all(): array;
 

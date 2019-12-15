@@ -1,10 +1,10 @@
 <?php
 
-namespace TrackMe\Component\Database;
+namespace TrackMe\Infrastructure\Persistence\PDO;
 
 use PDOStatement;
 
-interface DatabaseInterface
+interface RDBMS
 {
     public function execute(string $statement): int;
 

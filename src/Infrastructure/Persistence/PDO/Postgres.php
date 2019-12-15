@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace TrackMe\Component\Database;
+namespace TrackMe\Infrastructure\Persistence\PDO;
 
 use PDO;
 use PDOStatement;
 
-final class Database implements DatabaseInterface
+final class Postgres implements RDBMS
 {
     private PDO $pdo;
 

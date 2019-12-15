@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use TrackMe\App;
-use TrackMe\Component\Http\Request;
+use TrackMe\Infrastructure\Http\Request;
 
 require __DIR__.'/../vendor/autoload.php';
 
