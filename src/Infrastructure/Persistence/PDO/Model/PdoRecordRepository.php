@@ -2,27 +2,28 @@
 
 declare(strict_types=1);
 
-namespace TrackMe\Repository;
+namespace TrackMe\Infrastructure\Persistence\PDO\Model;
 
 use DateTimeImmutable;
 use PDO;
-use TrackMe\Component\Database\DatabaseInterface;
-use TrackMe\Model\Record;
+use TrackMe\Domain\Model\Record\Record;
+use TrackMe\Domain\Model\Record\RecordRepository;
+use TrackMe\Infrastructure\Persistence\PDO\RDBMS;
 
-final class RecordRepository implements RecordRepositoryInterface
+final class PdoRecordRepository implements RecordRepository
 {
-    private DatabaseInterface $database;
+    private RDBMS $db;
 
-    public function __construct(DatabaseInterface $database)
+    public function __construct(RDBMS $database)
     {
-        $this->database = $database;
+        $this->db = $database;
     }
 
     public function all(): array
     {
         $sql = 'SELECT * FROM records ORDER BY createdAt DESC';
 
-        $result = $this->database->query($sql)->fetchAll();
+        $result = $this->db->query($sql)->fetchAll();
         $records = [];
 
         foreach ($result as $item) {
@@ -44,7 +45,7 @@ final class RecordRepository implements RecordRepositoryInterface
     {
         $sql = 'INSERT INTO records (time_spent, description, createdat) VALUES (:time_spent, :description, :createdat)';
 
-        $statement = $this->database->prepare($sql);
+        $statement = $this->db->prepare($sql);
         $statement->bindParam(':time_spent', $record->timeSpent(), PDO::PARAM_STR);
         $statement->bindParam(':description', $record->description(), PDO::PARAM_STR);
         $statement->bindParam(':createdat', $record->createdAt()->format('Y-m-d H:i:s'));

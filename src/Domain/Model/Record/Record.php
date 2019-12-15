@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TrackMe\Model;
+namespace TrackMe\Domain\Model\Record;
 
 use DateTimeImmutable;
 
@@ -16,7 +16,7 @@ final class Record
     {
         $this->timeSpent = $timeSpent;
         $this->description = $description;
-        $this->createdAt = new DateTimeImmutable() ?? $createdAt;
+        $this->createdAt = $createdAt ?? new DateTimeImmutable();
     }
 
     public function timeSpent(): string

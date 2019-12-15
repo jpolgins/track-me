@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TrackMe\Component\Http;
+namespace TrackMe\Infrastructure\Http;
 
 final class Request
 {
